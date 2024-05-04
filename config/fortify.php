@@ -130,7 +130,7 @@ return [
     |
     */
 
-    'views' => true,
+    'views' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -154,6 +154,21 @@ return [
             'confirmPassword' => true,
             // 'window' => 0,
         ]),
+    ],
+
+    'paths' => [
+        'login' => 'auth/login',
+        'logout' => 'auth/logout',
+        'register' => 'auth/register',
+        'password' => [
+            'email' => 'auth/forgot-password',
+            'update' => 'auth/reset-password',
+        ],
+
+        'verification' => [
+            'send' => 'auth/email/verification-notification',
+            'verify' => 'auth/email/verify/{id}/{hash}',
+        ]
     ],
 
 ];
