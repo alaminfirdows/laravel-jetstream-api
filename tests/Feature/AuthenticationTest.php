@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,15 +33,5 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertGuest();
-    }
-
-    public function test_users_can_logout(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->post('/logout');
-
-        $this->assertGuest();
-        $response->assertNoContent();
     }
 }

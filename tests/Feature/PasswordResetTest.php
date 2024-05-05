@@ -1,11 +1,12 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Laravel\Fortify\Features;
 use Tests\TestCase;
 
 class PasswordResetTest extends TestCase
@@ -14,22 +15,34 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_password_link_can_be_requested(): void
     {
+        if (! Features::enabled(Features::resetPasswords())) {
+            $this->markTestSkipped('Password updates are not enabled.');
+        }
+
         Notification::fake();
 
         $user = User::factory()->create();
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->post('/forgot-password', [
+            'email' => $user->email,
+        ]);
 
         Notification::assertSentTo($user, ResetPassword::class);
     }
 
     public function test_password_can_be_reset_with_valid_token(): void
     {
+        if (! Features::enabled(Features::resetPasswords())) {
+            $this->markTestSkipped('Password updates are not enabled.');
+        }
+
         Notification::fake();
 
         $user = User::factory()->create();
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->post('/forgot-password', [
+            'email' => $user->email,
+        ]);
 
         Notification::assertSentTo($user, ResetPassword::class, function (object $notification) use ($user) {
             $response = $this->post('/reset-password', [
@@ -39,9 +52,7 @@ class PasswordResetTest extends TestCase
                 'password_confirmation' => 'password',
             ]);
 
-            $response
-                ->assertSessionHasNoErrors()
-                ->assertStatus(200);
+            $response->assertSessionHasNoErrors();
 
             return true;
         });

@@ -130,7 +130,7 @@ return [
     |
     */
 
-    'views' => true,
+    'views' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -146,7 +146,7 @@ return [
     'features' => [
         Features::registration(),
         Features::resetPasswords(),
-        // Features::emailVerification(),
+        Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
@@ -154,6 +154,25 @@ return [
             'confirmPassword' => true,
             // 'window' => 0,
         ]),
+    ],
+
+    'paths' => [
+        'login' => 'auth/login',
+        'logout' => 'auth/logout',
+        'register' => 'auth/register',
+        'password' => [
+            'email' => 'auth/forgot-password',
+            'update' => 'auth/reset-password',
+        ],
+
+        'verification' => [
+            'send' => 'auth/email/verification-notification',
+            'verify' => 'auth/email/verify/{id}/{hash}',
+        ]
+    ],
+
+    'redirects' => [
+        'email-verification' => config('app.frontend_url') . '/dashboard',
     ],
 
 ];
